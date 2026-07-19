@@ -1,7 +1,26 @@
 import app from "./app.js";
+import { env } from "./config/index.js";
+import { connectDatabase } from "./database/index.js";
+import "./modules/user/user.model.js";
 
-const PORT = process.env.PORT || 3000;
+const startServer = async () => {
+  try {
+    await connectDatabase();
 
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});
+    app.listen(env.PORT, () => {
+      console.log(
+        `🚀 Server running on http://localhost:${env.PORT}`
+      );
+    });
+  } catch (error) {
+    console.error("❌ Server failed to start");
+
+    if (error instanceof Error) {
+      console.error(error.message);
+    }
+
+    process.exit(1);
+  }
+};
+
+startServer();
